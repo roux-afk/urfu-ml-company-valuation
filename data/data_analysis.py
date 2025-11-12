@@ -11,11 +11,41 @@ from sklearn.metrics import mean_squared_error, mean_absolute_error  # для о
 train_csv = pd.read_csv('train.csv')
 test_csv = pd.read_csv('test.csv')
 
-print("Первые 5 строк тренировочных данных")
-print(train_csv.head())
-
-print("\nИнформация о данных")
+print("\nИнформация о данных:")
 print(train_csv.info())
 
 print("\nОсновные статистики:")
 print(train_csv.describe())
+
+# Разделяем на признаки (X) и целевую переменную (y)
+# Признаки - это то, на основе чего мы предсказываем
+# Целевая переменная - то, что мы предсказываем (стоимость)
+
+x = train_csv.drop("cost", axis=1)          # все колонки КРОМЕ cost
+y = train_csv["cost"]                             # только колонка cost
+
+# Проверяем пропущенные значения
+print("\nПропущенные значения")
+print(x.isnull().sum())                           # посчитает пропуски в каждой колонке
+
+# 1. Смотрим на распределение стоимости
+plt.figure(figsize=(10, 6))
+plt.hist(y, bins=30, alpha=0.6, color="blue", edgecolor="gray", linewidth=1)
+plt.title("Распределение стоимости компаний")
+plt.xlabel("Стоимость")
+plt.ylabel("Количество")
+plt.show()
+
+# 2. Смотрим корреляции (взаимосвязи между переменными)
+plt.figure(figsize=(18, 14))
+correlation_matrix = train_csv.corr()               # считаем корреляции
+sns.heatmap(correlation_matrix, annot=True, cmap="coolwarm", linewidths=0.5, linecolor="white", annot_kws={"size": 8})
+plt.title("Матрица корреляций")
+plt.subplots_adjust(left=0.15, right=0.95, bottom=0.15, top=0.95)
+plt.xticks(rotation=40, ha='right', fontsize=8)
+plt.show()
+
+# 3. Смотрим на самые важные признаки для стоимости
+correlation_with_cost = correlation_matrix["cost"].sort_values(ascending=False)
+print("\nКорреляция признаков со стоимостью:")
+print(correlation_with_cost)
