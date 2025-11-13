@@ -1,3 +1,5 @@
+from statistics import correlation
+
 import pandas as pd                                     # для работы с таблицами (как Excel в коде)
 import numpy as np                                      # для математических операций
 import matplotlib.pyplot as plt                         # для графиков
@@ -37,8 +39,8 @@ plt.ylabel("Количество")
 plt.show()
 
 # 2. Смотрим корреляции (взаимосвязи между переменными)
+correlation_matrix = train_csv.drop('id', axis=1).corr()    # Считаем корреляции кроме 'id'
 plt.figure(figsize=(18, 14))
-correlation_matrix = train_csv.corr()               # считаем корреляции
 sns.heatmap(correlation_matrix, annot=True, cmap="coolwarm", linewidths=0.5, linecolor="white", annot_kws={"size": 8})
 plt.title("Матрица корреляций")
 plt.subplots_adjust(left=0.15, right=0.95, bottom=0.15, top=0.95)
